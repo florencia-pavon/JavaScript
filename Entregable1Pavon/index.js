@@ -15,7 +15,10 @@ const menu = () => {
 function cargarNumero(){
     let nro;
     do {
-        nro = Number(prompt("Ingrese un numero: "))
+        nro = Number(prompt("Ingrese un número: "));
+        if (isNaN(nro)){
+            alert("Debe ingresar un caracter numérico")
+        }
     }
     while(isNaN(nro));
     return nro;
@@ -34,12 +37,17 @@ function calcular(opcion, nro1, nro2 = 0){
 }
 
 function agregarAlHistorial(resultado){
-    operaciones.push(resultado);
+    if (resultado !== "Opción inválida" && resultado !== "Division por cero"){
+        operaciones.push(resultado);
+    }
 }
 
 function mostrarHistorial(){
-    if (operaciones.length > 0){
-        console.log(operaciones);
+    let longitud = operaciones.length;
+    if (longitud > 0){
+        for (let i = 0; i < longitud; i++){
+            console.log(`Resultado operacion Nº ${i+1}: ${operaciones[i]}`);
+        }      
     }
     else {
         console.log("No se ha realizado ninguna operacion todavia")
@@ -59,10 +67,19 @@ let nro1, nro2;
 
 
 //Procesamiento
-let opcion = menu();
+let opcion;
 function iniciarCalculadora(){
-    while (opcion !== 7){
-        if (opcion !== 6){
+    do {
+        opcion = menu();
+        if (opcion === 7){
+            let confirma = confirm("Esta seguro que desea salir?");
+            if (!confirma){
+                opcion = 0;
+                continue;
+            }
+        }
+
+        if (opcion >= 1 && opcion <= 5){
             nro1 = cargarNumero();
             if (opcion !== 5){
                 nro2 = cargarNumero();
@@ -71,14 +88,14 @@ function iniciarCalculadora(){
             agregarAlHistorial(resultado);
             mostrarResultado(resultado);    
             }
-        else{
+        else if (opcion === 6){
             mostrarHistorial();
-            }
-
-            opcion = menu();
-        
-    }  
-    alert("Ha salido de la calculadora")      
+        }
+        else if (opcion!== 7){
+            alert("Opcion invalida intente nuevamente")
+        }
+    } while ((opcion !== 7));
+    alert("Ha salido de la calculadora") ;     
 }
 
 
