@@ -6,8 +6,9 @@ const menu = () => {
                 3. Multiplicar
                 4. Dividir
                 5. Saber si es par
-                6. Mostrar historial
-                7. Salir del menu`);
+                6. Saber si es primo
+                7. Mostrar historial
+                8. Salir del menu`);
     let opcion = Number(prompt("Eliga una opcion: "));
     return opcion;
 }
@@ -24,6 +25,15 @@ function cargarNumero(){
     return nro;
 }
 
+function esPrimo(nro){
+    if (nro <= 1) return false;
+    if (nro === 2) return true;
+    for (let i = 2; i <= Math.sqrt(nro); i++){
+        if (nro % i === 0) return false;
+    }
+    return true;
+}
+
 function calcular(opcion, nro1, nro2 = 0){
     switch(opcion){
         case 1: resultado = nro1 + nro2; break;
@@ -31,6 +41,7 @@ function calcular(opcion, nro1, nro2 = 0){
         case 3: resultado = nro1 * nro2; break;
         case 4: resultado = nro2 !== 0 ? nro1/nro2 : "Division por cero"; break;
         case 5: resultado = nro1 % 2 === 0 ? "Par" : "Impar"; break;
+        case 6: resultado = esPrimo(nro1)? "Primo" : "No primo"; break;
         default: resultado = "Opción inválida"; break;
     }
     return resultado;
@@ -71,30 +82,29 @@ let opcion;
 function iniciarCalculadora(){
     do {
         opcion = menu();
-        if (opcion === 7){
+        if (opcion === 8){
             let confirma = confirm("Esta seguro que desea salir?");
             if (!confirma){
                 opcion = 0;
                 continue;
             }
         }
-
-        if (opcion >= 1 && opcion <= 5){
+        if (opcion >= 1 && opcion <= 6){
             nro1 = cargarNumero();
-            if (opcion !== 5){
+            if (opcion !== 5 && opcion !== 6){
                 nro2 = cargarNumero();
                 }
             resultado = calcular(opcion, nro1, nro2);
             agregarAlHistorial(resultado);
             mostrarResultado(resultado);    
             }
-        else if (opcion === 6){
+        else if (opcion === 7){
             mostrarHistorial();
         }
-        else if (opcion!== 7){
+        else if (opcion!== 8){
             alert("Opcion invalida intente nuevamente")
         }
-    } while ((opcion !== 7));
+    } while ((opcion !== 8));
     alert("Ha salido de la calculadora") ;     
 }
 
