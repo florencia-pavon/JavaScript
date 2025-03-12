@@ -5,10 +5,12 @@ class Producto {
     this.imagen = imagen;
     this.cantidad = 0;
   }
+
 }
 
 tortas = [];
 cookies = [];
+
 
 tortas.push(
   new Producto("marquise", 20500, "./multimedia/tortas/marquise.jpg"),
@@ -29,17 +31,91 @@ cookies.push(
 );
 
 
+function eliminarDelCarrito(nombreProducto){
+  let carrito = JSON.parse(localStorage.getItem("carrito"));
+  carrito = carrito.filter(producto => producto.nombre !== nombreProducto);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  imprimirCarritoHTML();
+}
+
+function calcularTotal(){
+  let carrito = JSON.parse(localStorage.getItem("carrito"));
+  return carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+}
+
+function imprimirCarritoHTML(){
+  let carrito = JSON.parse(localStorage.getItem("carrito"));
+  const contenedor = document.getElementById("contenedor-carrito");
+  let tabla = contenedor.querySelector("table");
+  if (!tabla) {
+    tabla = document.createElement("table");
+    tabla.classList.add("table", "table-striped");
+    tabla.innerHTML = `
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+    </thead>
+  `;
+  contenedor.appendChild(tabla);
+  }
+
+  const tbody = tabla.querySelector("tbody") || document.createElement("tbody");
+  tabla.appendChild(tbody);
+  tbody.innerHTML = "";
+  
+  carrito.forEach((producto, index) =>{
+    const fila = document.createElement("tr");
+
+    fila.innerHTML = `
+          <th>${index+1}</th>
+          <th>${producto.nombre}</th>
+          <th>${producto.precio}</th>
+          <th>${producto.cantidad}</th>
+          <th>${producto.cantidad*producto.precio}</th>
+          <th><button id="eliminar" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </button>
+          </th>
+    `;
+
+    tbody.appendChild(fila);
+    const botonEliminar = fila.querySelector("#eliminar");
+    botonEliminar.addEventListener("click", () => {
+      eliminarDelCarrito(producto.nombre)
+    });
+  });
+
+  tbody.innerHTML += `
+    <tr>
+      <th colspan="4">Total</th>
+      <th>${calcularTotal()}</th>
+    </tr>
+  `;
+}
+
 function agregarAlCarrito(producto){
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-  carrito.push(producto);
+  const productoExistente = carrito.find(p => p.nombre === producto.nombre);
+  if(productoExistente){
+    productoExistente.cantidad += producto.cantidad;
+  }
+  else{
+    carrito.push(producto);
+  }
   localStorage.setItem("carrito", JSON.stringify(carrito));
   if (carrito.length > 0) {
-    imprimirCarritoHTML(carrito);
+    imprimirCarritoHTML();
   }
 }
 
-function mostrarTortasHTML(tortas) {
-  const contenedor = document.getElementById("carouselTortas");
+function mostrarProductosHTML(productos, idContenedor) {
+  const contenedor = document.getElementById(idContenedor);
 
   const indicadores = document.createElement("ol");
   indicadores.classList.add("carousel-indicators");
@@ -49,9 +125,9 @@ function mostrarTortasHTML(tortas) {
   inner.classList.add("carousel-inner");
   contenedor.appendChild(inner);
 
-  tortas.forEach((torta, index) => {
+  productos.forEach((producto, index) => {
     const indicador = document.createElement("li");
-    indicador.setAttribute("data-target", "#carouselTortas");
+    indicador.setAttribute("data-target", `#${idContenedor}`);
     indicador.setAttribute("data-slide-to", index);
     if (index === 0) indicador.classList.add("active");
     indicadores.appendChild(indicador);
@@ -61,35 +137,35 @@ function mostrarTortasHTML(tortas) {
     if (index === 0) item.classList.add("active");
 
     item.innerHTML = `
-        <img src="${torta.imagen}" class="d-block w-100" alt="${torta.nombre}"/>
+        <img src="${producto.imagen}" class="d-block w-100" alt="${producto.nombre}"/>
         <div class="carousel-caption">
-            <h3>${torta.nombre}</h3>
-            <p>$${torta.precio}</p>
+            <h3>${producto.nombre}</h3>
+            <p>$${producto.precio}</p>
             <label for="cantidad">Cantidad</label>
                 <input
                   type="number"
                   name="cantidad"
-                  id="cantidad-${torta.nombre}"
+                  id="cantidad-${producto.nombre}"
                   min="1"
                   required
                 />
-            <button id="${torta.nombre}">Agregar al carrito</button>
+            <button id="${producto.nombre}">Agregar al carrito</button>
         </div>
         `;
 
 
     inner.appendChild(item);
-    const boton = document.getElementById(`${torta.nombre}`);
+    const boton = document.getElementById(`${producto.nombre}`);
     boton.addEventListener("click", ()=> {
-      const cantidadInput = document.getElementById(`cantidad-${torta.nombre}`);
-      torta.cantidad = parseInt(cantidadInput.value, 10) || 1;
-      agregarAlCarrito(torta);
+      const cantidadInput = document.getElementById(`cantidad-${producto.nombre}`);
+      producto.cantidad = parseInt(cantidadInput.value, 10) || 1;
+      agregarAlCarrito(producto);
     });
       
   });
-
-
 }
 
-mostrarTortasHTML(tortas);
+mostrarProductosHTML(tortas, "carouselTortas");
+mostrarProductosHTML(cookies, "carouselCookies");
+
 
