@@ -13,21 +13,21 @@ cookies = [];
 
 
 tortas.push(
-  new Producto("marquise", 20500, "./multimedia/tortas/marquise.jpg"),
-  new Producto("lemon", 17500, "./multimedia/tortas/lemon.jpg"),
-  new Producto("rogel", 18500, "./multimedia/tortas/rogel.jpg"),
-  new Producto("cheescake", 18000, "./multimedia/tortas/cheescake.jpg"),
-  new Producto("cabsha", 20500, "./multimedia/tortas/cabsha.jpg"),
-  new Producto("pavlova", 22000, "./multimedia/tortas/pavlova.jpg")
+  new Producto("Marquise con Oreo", 20500, "./multimedia/tortas/marquise.jpg"),
+  new Producto("Lemon Pie", 17500, "./multimedia/tortas/lemon.jpg"),
+  new Producto("Rogel", 18500, "./multimedia/tortas/rogel.jpg"),
+  new Producto("Cheescake", 18000, "./multimedia/tortas/cheescake.jpg"),
+  new Producto("Cabsha", 20500, "./multimedia/tortas/cabsha.jpg"),
+  new Producto("Pavlova", 22000, "./multimedia/tortas/pavlova.jpg")
 );
 
 cookies.push(
-  new Producto("carrot", 2500, "./multimedia/cookies/carrot.jpg"),
-  new Producto("brownie", 2000, "./multimedia/cookies/brownie.jpg"),
-  new Producto("canela", 2000, "./multimedia/cookies/canela.jpg"),
-  new Producto("chip", 2000, "./multimedia/cookies/chip.jpg"),
-  new Producto("red", 3000, "./multimedia/cookies/red.jpg"),
-  new Producto("pistacho", 3000, "./multimedia/cookies/pistacho.jpg")
+  new Producto("Carrot Cake", 2500, "./multimedia/cookies/carrot.jpg"),
+  new Producto("Brownie", 2000, "./multimedia/cookies/brownie.jpg"),
+  new Producto("Canela", 2000, "./multimedia/cookies/canela.jpg"),
+  new Producto("Chip de Chocolate", 2000, "./multimedia/cookies/chip.jpg"),
+  new Producto("Red Velvet", 3000, "./multimedia/cookies/red.jpg"),
+  new Producto("Pistacho", 3000, "./multimedia/cookies/pistacho.jpg")
 );
 
 
@@ -38,10 +38,6 @@ function eliminarDelCarrito(nombreProducto){
   imprimirCarritoHTML();
 }
 
-function calcularTotal(){
-  let carrito = JSON.parse(localStorage.getItem("carrito"));
-  return carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
-}
 
 function imprimirCarritoHTML(){
   let carrito = JSON.parse(localStorage.getItem("carrito"));
@@ -49,16 +45,20 @@ function imprimirCarritoHTML(){
   let tabla = contenedor.querySelector("table");
   if (!tabla) {
     tabla = document.createElement("table");
-    tabla.classList.add("table", "table-striped");
+    tabla.classList.add("table");
     tabla.innerHTML = `
     <thead>
+        <tr>
+          <th> <i class="bi bi-cart3"></i> </th>
+          <th colspan="6" class="text-center">Carrito de Compras</th>
+        </tr>
         <tr>
           <th>#</th>
           <th>Producto</th>
           <th>Precio</th>
           <th>Cantidad</th>
           <th>Subtotal</th>
-          <th></th>
+          <th>Eliminar</th>
         </tr>
     </thead>
   `;
@@ -68,16 +68,20 @@ function imprimirCarritoHTML(){
   const tbody = tabla.querySelector("tbody") || document.createElement("tbody");
   tabla.appendChild(tbody);
   tbody.innerHTML = "";
+  let total = 0;
   
   carrito.forEach((producto, index) =>{
     const fila = document.createElement("tr");
+    let subtotal = producto.cantidad*producto.precio;
+    
+    total += subtotal;
 
     fila.innerHTML = `
           <th>${index+1}</th>
           <th>${producto.nombre}</th>
           <th>${producto.precio}</th>
           <th>${producto.cantidad}</th>
-          <th>${producto.cantidad*producto.precio}</th>
+          <th>${subtotal}</th>
           <th><button id="eliminar" class="btn btn-danger btn-sm">
                 <i class="bi bi-trash"></i>
               </button>
@@ -90,13 +94,26 @@ function imprimirCarritoHTML(){
       eliminarDelCarrito(producto.nombre)
     });
   });
-
-  tbody.innerHTML += `
-    <tr>
-      <th colspan="4">Total</th>
-      <th>${calcularTotal()}</th>
-    </tr>
+  const filaTotal = document.createElement("tr");
+  filaTotal.innerHTML = `
+    <th colspan="4">Total</th>
+    <th>${total}</th>
   `;
+  tbody.appendChild(filaTotal);
+  const filaComprar = document.createElement("tr");
+  const columnaComprar = document.createElement("td");
+  columnaComprar.setAttribute("colspan", "4");
+  filaComprar.appendChild(columnaComprar);
+  tbody.appendChild(filaComprar);
+  const botonComprar = document.createElement("button");
+  botonComprar.classList.add("btn", "btn-success", "my-3");
+  botonComprar.textContent = "Comprar";
+  filaComprar.appendChild(botonComprar);
+  botonComprar.addEventListener("click", () => {
+    alert("Gracias por su compra");
+    localStorage.removeItem("carrito");
+    imprimirCarritoHTML();
+  });
 }
 
 function agregarAlCarrito(producto){
@@ -138,18 +155,21 @@ function mostrarProductosHTML(productos, idContenedor) {
 
     item.innerHTML = `
         <img src="${producto.imagen}" class="d-block w-100" alt="${producto.nombre}"/>
-        <div class="carousel-caption">
+        <div class="carousel-caption text-start d-flex flex-column align-items-center">
             <h3>${producto.nombre}</h3>
-            <p>$${producto.precio}</p>
-            <label for="cantidad">Cantidad</label>
-                <input
+            <p class="description">$${producto.precio}</p>
+            <div class="center-horizontal gap-2 my-2"> 
+              <input
                   type="number"
+                  placeholder="Cantidad"
+                  class="form-control"
                   name="cantidad"
                   id="cantidad-${producto.nombre}"
                   min="1"
                   required
-                />
-            <button id="${producto.nombre}">Agregar al carrito</button>
+              />
+            </div>
+            <button id="${producto.nombre}" class="btn btn-light">Agregar al carrito</button>
         </div>
         `;
 
