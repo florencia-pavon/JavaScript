@@ -1,0 +1,66 @@
+{
+    "tortas": [
+        {
+            "nombre": "Marquise con Oreo",
+            "precio": 20500,
+            "imagen": "./multimedia/tortas/marquise.jpg"
+        },
+        {
+            "nombre": "Lemon Pie",
+            "precio": 17500,
+            "imagen": "./multimedia/tortas/lemon.jpg"
+        },
+        {
+            "nombre": "Rogel",
+            "precio": 18500,
+            "imagen": "./multimedia/tortas/rogel.jpg"
+        },
+        {
+            "nombre": "Cheescake",
+            "precio": 18000,
+            "imagen": "./multimedia/tortas/cheescake.jpg"
+        },
+        {
+            "nombre": "Cabsha",
+            "precio": 20500,
+            "imagen": "./multimedia/tortas/cabsha.jpg"
+        },
+        {
+            "nombre": "Pavlova",
+            "precio": 22000,
+            "imagen": "./multimedia/tortas/pavlova.jpg"
+        }
+    ],
+    "cookies": [
+        {
+            "nombre": "Carrot Cake",
+            "precio": 2500,
+            "imagen": "./multimedia/cookies/carrot.jpg"
+        },
+        {
+            "nombre": "Brownie",
+            "precio": 2000,
+            "imagen": "./multimedia/cookies/brownie.jpg"
+        },
+        {
+            "nombre": "Canela",
+            "precio": 2000,
+            "imagen": "./multimedia/cookies/canela.jpg"
+        },
+        {
+            "nombre": "Chip de Chocolate",
+            "precio": 2000,
+            "imagen": "./multimedia/cookies/chip.jpg"
+        },
+        {
+            "nombre": "Red Velvet",
+            "precio": 3000,
+            "imagen": "./multimedia/cookies/red.jpg"
+        },
+        {
+            "nombre": "Pistacho",
+            "precio": 3000,
+            "imagen": "./multimedia/cookies/pistacho.jpg"
+        }
+    ]
+}
