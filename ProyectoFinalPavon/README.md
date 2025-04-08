@@ -20,6 +20,8 @@ Este es un proyecto desarrollado en **JavaScript**, el cual permite gestionar un
 - 🎭 **Bootstrap** → Estilos y componentes responsivos./
 
 ## 📸 Capturas
+<img width="1441" alt="image" src="https://github.com/user-attachments/assets/515ec669-3300-49a7-96f5-4885b3f5135a" />
+
 
 
 ## ✨ Autora
